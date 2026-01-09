@@ -1,15 +1,8 @@
-# DevOps Microservice
+# DevOps Microservice Project
 
-Production-ready Python Flask microservice with CI/CD pipeline using Jenkins and Docker.
+This project demonstrates a complete DevOps pipeline:
 
-## Endpoints
-- / : Home
-- /health : Health Check
-
-## Run Locally
-pip install -r requirements.txt
-python app/main.py
-
-## Docker
-docker build -t devops-microservice .
-docker run -d -p 5000:5000 devops-microservice
+- Frontend: Nginx + Docker
+- Backend: Python Flask + Docker
+- CI/CD: Jenkins
+- Infrastructure: AWS EC2
