@@ -18,8 +18,13 @@ pipeline {
         stage('Verify Tools') {
             steps {
                 sh '''
+                    echo "Git version:"
                     git --version
-                    java -version || true
+
+                    echo "Docker version:"
+                    docker --version || true
+
+                    echo "Maven version:"
                     mvn -version || true
                 '''
             }
@@ -27,7 +32,7 @@ pipeline {
 
         stage('Build Application') {
             when {
-                fileExists 'pom.xml'
+                expression { fileExists('pom.xml') }
             }
             steps {
                 sh 'mvn clean package -DskipTests'
@@ -36,7 +41,7 @@ pipeline {
 
         stage('Docker Build') {
             when {
-                fileExists 'Dockerfile'
+                expression { fileExists('Dockerfile') }
             }
             steps {
                 sh "docker build -t ${DOCKER_IMAGE}:latest ."
@@ -46,10 +51,10 @@ pipeline {
 
     post {
         success {
-            echo "Pipeline completed successfully"
+            echo "✅ Pipeline completed successfully"
         }
         failure {
-            echo "Pipeline failed"
+            echo "❌ Pipeline failed"
         }
     }
 }
