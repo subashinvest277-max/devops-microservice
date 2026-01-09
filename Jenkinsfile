@@ -1,60 +1,39 @@
 pipeline {
     agent any
 
-    environment {
-        APP_NAME = "devops-microservice"
-        DOCKER_IMAGE = "subashinvest27/devops-microservice"
+    tools {
+        maven 'MAVEN_HOME'
+        jdk 'JAVA_HOME'
     }
 
     stages {
 
-        stage('Checkout Source Code') {
+        stage('Checkout Code') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/subashinvest27/devops-microservice.git'
+                    url: 'https://github.com/subashinvest277-max/devops-microservice.git'
             }
         }
 
-        stage('Verify Tools') {
-            steps {
-                sh '''
-                    echo "Git version:"
-                    git --version
-
-                    echo "Docker version:"
-                    docker --version || true
-
-                    echo "Maven version:"
-                    mvn -version || true
-                '''
-            }
-        }
-
-        stage('Build Application') {
-            when {
-                expression { fileExists('pom.xml') }
-            }
+        stage('Maven Build') {
             steps {
                 sh 'mvn clean package -DskipTests'
             }
         }
 
         stage('Docker Build') {
-            when {
-                expression { fileExists('Dockerfile') }
-            }
             steps {
-                sh "docker build -t ${DOCKER_IMAGE}:latest ."
+                sh 'docker build -t devops-microservice:latest .'
             }
         }
     }
 
     post {
         success {
-            echo "✅ Pipeline completed successfully"
+            echo 'BUILD SUCCESSFUL'
         }
         failure {
-            echo "❌ Pipeline failed"
+            echo 'BUILD FAILED'
         }
     }
 }
